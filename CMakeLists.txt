@@ -240,7 +240,7 @@ elseif (Fortran_COMPILER_NAME MATCHES "ifort.*")
     endif()
   endif()
 
-elseif (Fortran_COMPILER_NAME MATCHES "ifx.*")
+elseif (CMAKE_Fortran_COMPILER_ID MATCHES "IntelLLVM")
   if (REFPROP_DYNAMIC_RUNTIME)
     if ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
       set (CMAKE_Fortran_FLAGS_RELEASE "-O3 -fopenmp -dynamic-openmp")
