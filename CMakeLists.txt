@@ -239,6 +239,27 @@ elseif (Fortran_COMPILER_NAME MATCHES "ifort.*")
       set (CMAKE_Fortran_FLAGS_DEBUG   "-f77rtl -debug:full -Od /libs:static /MT")
     endif()
   endif()
+
+elseif (Fortran_COMPILER_NAME MATCHES "ifx.*")
+  if (REFPROP_DYNAMIC_RUNTIME)
+    if ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+      set (CMAKE_Fortran_FLAGS_RELEASE "-O3 -fopenmp -dynamic-openmp")
+      set (CMAKE_Fortran_FLAGS_DEBUG   "-g -O0 -fopenmp -dynamic-openmp")
+    else() # Windows
+      set (CMAKE_Fortran_FLAGS_RELEASE "-f77rtl -O3 /threads")
+      set (CMAKE_Fortran_FLAGS_DEBUG   "-f77rtl -debug:full -Od")
+    endif()
+  else()
+    if ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+      set (CMAKE_Fortran_FLAGS_RELEASE "-O3 -static-intel -fopenmp -static-openmp")
+      set (CMAKE_Fortran_FLAGS_DEBUG   "-g -O0 -static-intel -fopenmp -static-openmp")
+    else() # Windows
+      # Force visual studio to statically link the c runtime to avoid dependency on MSVCRXXX.dll
+      set (CMAKE_Fortran_FLAGS_RELEASE "-f77rtl -O3 /threads /libs:static /MT")
+      set (CMAKE_Fortran_FLAGS_DEBUG   "-f77rtl -debug:full -Od /libs:static /MT")
+    endif()
+  endif()
+
 else ()
   message ("CMAKE_Fortran_COMPILER full path: " ${CMAKE_Fortran_COMPILER})
   message ("Fortran compiler: " ${Fortran_COMPILER_NAME})
